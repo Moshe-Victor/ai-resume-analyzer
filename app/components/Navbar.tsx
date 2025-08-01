@@ -5,7 +5,7 @@ import {Link} from "react-router";
 type Props = {
     
 };
-export const Navbar = (props: Props) => {
+const Navbar = (props: Props) => {
     return (
         <nav className="navbar">
             <Link to="/">
@@ -17,3 +17,5 @@ export const Navbar = (props: Props) => {
         </nav>
     );
 };
+
+export default Navbar;

@@ -1,5 +1,5 @@
-import React, {type FormEvent, useState} from 'react';
-import {Navbar} from "~/components/Navbar";
+import {type FormEvent, useState} from 'react'
+import Navbar from "~/components/Navbar";
 import FileUploader from "~/components/FileUploader";
 import {usePuterStore} from "~/lib/puter";
 import {useNavigate} from "react-router";
@@ -15,7 +15,7 @@ const Upload = () => {
     const [file, setFile] = useState<File | null>(null);
 
     const handleFileSelect = (file: File | null) => {
-        setFile(file);
+        setFile(file)
     }
 
     const handleAnalyze = async ({ companyName, jobTitle, jobDescription, file }: { companyName: string, jobTitle: string, jobDescription: string, file: File  }) => {
@@ -23,7 +23,7 @@ const Upload = () => {
 
         setStatusText('Uploading the file...');
         const uploadedFile = await fs.upload([file]);
-        if (!uploadedFile) return setStatusText('Error: Failed to upload file');
+        if(!uploadedFile) return setStatusText('Error: Failed to upload file');
 
         setStatusText('Converting to image...');
         const imageFile = await convertPdfToImage(file);
@@ -44,9 +44,11 @@ const Upload = () => {
         }
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
+        setStatusText('Analyzing...');
+
         const feedback = await ai.feedback(
             uploadedFile.path,
-             prepareInstructions({ jobTitle, jobDescription })
+            prepareInstructions({ jobTitle, jobDescription })
         )
         if (!feedback) return setStatusText('Error: Failed to analyze resume');
 
@@ -58,9 +60,7 @@ const Upload = () => {
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting...');
         console.log(data);
-        // navigate(`/resume/${uuid}`);
-
-
+        navigate(`/resume/${uuid}`);
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -76,7 +76,6 @@ const Upload = () => {
         if(!file) return;
 
         handleAnalyze({ companyName, jobTitle, jobDescription, file });
-
     }
 
     return (
@@ -110,12 +109,12 @@ const Upload = () => {
                             </div>
 
                             <div className="form-div">
-                                <label htmlFor="uploader">Upload CV</label>
+                                <label htmlFor="uploader">Upload Resume</label>
                                 <FileUploader onFileSelect={handleFileSelect} />
                             </div>
 
                             <button className="primary-button" type="submit">
-                                Analyze CV
+                                Analyze Resume
                             </button>
                         </form>
                     )}
@@ -123,6 +122,5 @@ const Upload = () => {
             </section>
         </main>
     )
-};
-
-export default Upload;
+}
+export default Upload
